@@ -104,5 +104,17 @@ namespace Microsoft.Azure.Commands.RemoteApp {
                 return ResourceManager.GetString("SessionNotFoundByUserUpnFormat", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Update collection.
+        /// </summary>
+        internal static string UpdateCollection
+        {
+            get
+            {
+                return ResourceManager.GetString("UpdateCollection", resourceCulture);
+            }
+        }
+
     }
 }

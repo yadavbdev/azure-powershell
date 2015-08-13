@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Commands.Utilities.Common;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using Microsoft.Azure.Commands.RemoteApp.Common;
 using System.Management.Automation;
 using System;
@@ -47,5 +48,17 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                 ThrowTerminatingError(cloudRecord.er);
             }
         }
+
+        public Collection FindCollection(string ResourceGroupName, string collectionName)
+        {
+            Collection response = null;
+            response = RemoteAppClient.Get(ResourceGroupName, collectionName);
+            if (response == null)
+            {
+                WriteErrorWithTimestamp("Collection " + collectionName + " not found in resource group " + ResourceGroupName);
+            }
+            return response;
+        }
+
     }
 }

@@ -123,6 +123,8 @@
     <Compile Include="Account\SetAzureRemoteAppWorkspace.cs" />
     <Compile Include="Account\SetAzureRemoteAppAccountBilling.cs" />
     <Compile Include="Collection\NewAzureRemoteAppCollection.cs" />
+    <Compile Include="Collection\RemoveAzureRemoteAppCollection.cs" />
+    <Compile Include="Collection\UpdateAzureRemoteAppCollection.cs" />
     <Compile Include="Commands.RemoteApp.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
