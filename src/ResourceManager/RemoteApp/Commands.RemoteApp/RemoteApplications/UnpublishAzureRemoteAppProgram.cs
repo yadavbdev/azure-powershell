@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +58,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             {
                 AliasesListParameter appAlias = new AliasesListParameter()
                 {
-                    AliasesList = new List<string>(Alias)
+                    Aliases = new List<string>(Alias)
                 };
 
                 response = RemoteAppClient.UnpublishApp(ResourceGroupName, CollectionName, appAlias);

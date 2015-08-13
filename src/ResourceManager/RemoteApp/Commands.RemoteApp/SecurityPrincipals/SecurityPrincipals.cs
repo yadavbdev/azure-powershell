@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
@@ -25,47 +25,30 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             Remove
         }
 
-        public SecurityPrincipalOperationsResult ProcessUsers(Operation op, string collectionName, PrincipalProviderType provider, string[] userUpn)
+        public SecurityPrincipalOperationErrorDetails ProcessUsers(Operation op, string collectionName, PrincipalProviderType provider, string userUpn)
         {
-            SecurityPrincipalOperationsResult response = null;
-            SecurityPrincipalListParameter spList = null;
+            SecurityPrincipalOperationErrorDetails response = null;
+            SecurityPrincipal user = null;
 
-            spList = BuildUserList(userUpn, provider);
+            user = new SecurityPrincipal()
+            {
+                AadObjectId = null,
+                Description = null,
+                Name = userUpn,
+                SecurityPrincipalType = PrincipalType.User,
+                UserIdType = provider
+            };
 
             if (op == Operation.Add)
             {
-                response = RemoteAppClient.AddUsers(ResourceGroupName, collectionName, spList);
+                response = RemoteAppClient.AddUser(ResourceGroupName, collectionName, user);
             }
             else
             {
-                response = RemoteAppClient.DeleteUsers(ResourceGroupName, collectionName, spList);
+                response = RemoteAppClient.DeleteUser(ResourceGroupName, collectionName, user);
             }
 
             return response;
-        }
-
-        public SecurityPrincipalListParameter BuildUserList(string[] Users, PrincipalProviderType userIdType)
-        {
-            SecurityPrincipalListParameter userList = new SecurityPrincipalListParameter();
-            List<SecurityPrincipal> spList = new List<SecurityPrincipal>();
-
-            foreach (string user in Users)
-            {
-                SecurityPrincipal principal = new SecurityPrincipal()
-                {
-                    AadObjectId = null,
-                    Description = null,
-                    Name = user,
-                    SecurityPrincipalType = PrincipalType.User,
-                    UserIdType = userIdType
-                };
-
-                spList.Add(principal);
-            }
-
-            userList.SecurityPrincipals = spList;
-
-            return userList;
         }
     }
 }

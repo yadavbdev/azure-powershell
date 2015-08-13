@@ -1,5 +1,5 @@
 ﻿using Microsoft.Azure.Management.RemoteApp;
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Common
@@ -8,20 +8,19 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
     {
         internal IList<SecurityPrincipalInfo> GetUsers(string ResourceGroupName, string collectionName, string UserUpn)
         {
-            SecurityPrincipalInfoListResult response = Client.Collection.GetUsers(ResourceGroupName, UserUpn, null);
+            SecurityPrincipalInfoListResult response = Client.CollectionOperations.GetUsers(ResourceGroupName, DefaultRemoteAppArmNamespace, UserUpn, RemoteAppApiVersionValue, null);
 
-            return response.ResultList;
+            return response.UserConsentStatuses;
         }
 
-
-        internal SecurityPrincipalOperationsResult AddUsers(string ResourceGroupName, string collectionName, SecurityPrincipalListParameter spList)
+        internal SecurityPrincipalOperationErrorDetails AddUser(string ResourceGroupName, string collectionName, SecurityPrincipal userToAdd)
         {
-            return Client.Collection.AddSecurityPrincipals(ResourceGroupName, collectionName, spList);
+            return Client.CollectionOperations.AddSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToAdd.Name, RemoteAppApiVersionValue, userToAdd);
         }
 
-        internal SecurityPrincipalOperationsResult DeleteUsers(string ResourceGroupName, string collectionName, SecurityPrincipalListParameter spList)
+        internal SecurityPrincipalOperationErrorDetails DeleteUser(string ResourceGroupName, string collectionName, SecurityPrincipal userToDelete)
         {
-            return Client.Collection.DeleteSecurityPrincipals(ResourceGroupName, collectionName, spList);
+            return Client.CollectionOperations.DeleteSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToDelete.Name, RemoteAppApiVersionValue, userToDelete);
         }
 
     }

@@ -13,12 +13,12 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 {
-    [Cmdlet(VerbsCommon.Add, "AzureRemoteAppUser"), OutputType(typeof(SecurityPrincipalOperationsResult))]
+    [Cmdlet(VerbsCommon.Add, "AzureRemoteAppUser"), OutputType(typeof(SecurityPrincipalOperationErrorDetails))]
     public class AddAzureRemoteAppUser : SecurityPrincipalsCmdletBase
     {
         [Parameter(Mandatory = true,
@@ -38,13 +38,13 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
         [Parameter(Mandatory = true,
             Position = 3,
             ValueFromPipeline = false,
-            HelpMessage = "One or more user UPNs to add to the RemoteApp collection.")]
+            HelpMessage = "A user UPN to add to the RemoteApp collection.")]
         [ValidatePattern(UserPrincipalValdatorString)]
-        public string[] UserUpn { get; set; }
+        public string UserUpn { get; set; }
 
         public override void ExecuteRemoteAppCmdlet()
         {
-            SecurityPrincipalOperationsResult response = null;
+            SecurityPrincipalOperationErrorDetails response = null;
 
             response = ProcessUsers(Operation.Add, CollectionName, Provider, UserUpn);
 

@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 using LocalModels;
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +64,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                     }
                 }
 
-                return string.Compare(first.Properties.SecurityPrincipal.Name, second.Properties.SecurityPrincipal.Name, StringComparison.OrdinalIgnoreCase);
+                return string.Compare(first.Properties.User.Name, second.Properties.User.Name, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -80,8 +80,8 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             {
                 SecurityPrincipalInfo userconsent = null;
 
-                userconsent = response.FirstOrDefault(user => user.Properties.SecurityPrincipal.SecurityPrincipalType == PrincipalType.User &&
-                     String.Equals(user.Properties.SecurityPrincipal.Name, UserUpn, StringComparison.OrdinalIgnoreCase));
+                userconsent = response.FirstOrDefault(user => user.Properties.User.SecurityPrincipalType == PrincipalType.User &&
+                     String.Equals(user.Properties.User.Name, UserUpn, StringComparison.OrdinalIgnoreCase));
 
                 if (userconsent == null)
                 {
@@ -101,12 +101,12 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 
                 if (showAllUsers)
                 {
-                    spList = response.Where(user => user.Properties.SecurityPrincipal.SecurityPrincipalType == PrincipalType.User);
+                    spList = response.Where(user => user.Properties.User.SecurityPrincipalType == PrincipalType.User);
                 }
                 else
                 {
-                    spList = response.Where(user => user.Properties.SecurityPrincipal.SecurityPrincipalType == PrincipalType.User &&
-                        Wildcard.IsMatch(user.Properties.SecurityPrincipal.Name));
+                    spList = response.Where(user => user.Properties.User.SecurityPrincipalType == PrincipalType.User &&
+                        Wildcard.IsMatch(user.Properties.User.Name));
                 }
 
                 if (spList != null && spList.Count() > 0)

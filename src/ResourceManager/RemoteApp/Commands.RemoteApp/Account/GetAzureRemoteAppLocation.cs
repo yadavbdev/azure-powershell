@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using Microsoft.Azure.Commands.RemoteApp.Common;
 using Microsoft.WindowsAzure.Commands.Utilities.Common;
 using System;

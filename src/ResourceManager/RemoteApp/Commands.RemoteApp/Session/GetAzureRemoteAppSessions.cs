@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,10 +62,10 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                     {
                         foreach (SessionWrapper session in sessions)
                         {
-                            if (session.Session.UserUpn == UserUpn)
+                            if (session.Properties.UserUpn == UserUpn)
                             {
                                 found = true;
-                                WriteObject(session.Session);
+                                WriteObject(session.Properties);
                             }
                         }
                         if (!found)

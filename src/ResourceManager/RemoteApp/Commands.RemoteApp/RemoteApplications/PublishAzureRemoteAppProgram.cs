@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,19 +59,14 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 
         public override void ExecuteRemoteAppCmdlet()
         {
-            IList<PublishingOperationResult> response = null;
-            ApplicationDetailsListParameter appDetails = new ApplicationDetailsListParameter()
-            {
-                DetailsList = new List<ApplicationDetails>()
-                {
-                    new ApplicationDetails()
-                }
-            };
+            PublishingOperationResult response = null;
+            ApplicationDetails appDetails = new ApplicationDetails();
+               
 
             string appName = null;
             string appPath = null;
             string iconURI = null;
-            IDictionary<int, string> iconPngUris = new Dictionary<int, string>();
+            IDictionary<string, string> iconPngUris = new Dictionary<string, string>();
 
             switch (ParameterSetName)
             {
@@ -94,17 +89,17 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                 }
             }
 
-            appDetails.DetailsList[0].Name = String.IsNullOrWhiteSpace(DisplayName) ? appName : DisplayName;
-            appDetails.DetailsList[0].VirtualPath = appPath;
+            appDetails.Name = String.IsNullOrWhiteSpace(DisplayName) ? appName : DisplayName;
+            appDetails.VirtualPath = appPath;
 
-            appDetails.DetailsList[0].IconUri = iconURI;
-            appDetails.DetailsList[0].IconPngUris = iconPngUris;
+            appDetails.IconUri = iconURI;
+            appDetails.IconPngUris = iconPngUris;
 
-            appDetails.DetailsList[0].Alias = "";
+            appDetails.Alias = "";
 
-            appDetails.DetailsList[0].CommandLineArguments = CommandLine;
+            appDetails.CommandLineArguments = CommandLine;
 
-            appDetails.DetailsList[0].AvailableToUsers = true;
+            appDetails.AvailableToUsers = true;
 
             response = RemoteAppClient.PublishApp(ResourceGroupName, CollectionName, appDetails);
 

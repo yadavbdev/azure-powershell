@@ -12,7 +12,7 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using Microsoft.Azure.Management.Network;
 using Microsoft.Azure.Management.Network.Models;
 using System;
@@ -132,7 +132,9 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 
         public override void ExecuteRemoteAppCmdlet()
         {
-            CollectionCreationDetails createDetails = new CollectionCreationDetails()
+            CollectionCreationDetailsWrapper createDetails = new CollectionCreationDetailsWrapper();
+
+            createDetails.Properties = new CollectionCreationDetails()
             {
                 Name = CollectionName,
                 TemplateImageName = ImageName,

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Azure.Common.Authentication;
 using Microsoft.Azure.Common.Authentication.Models;
 using Microsoft.Azure.Management.RemoteApp;
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using Microsoft.WindowsAzure.Commands.ServiceManagement.Model;
 using System;
 using System.Collections.Generic;
@@ -10,36 +10,43 @@ using System.Text;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Common
 {
+
+
     public partial class RemoteAppManagementClientWrapper
     {
-        private RemoteAppManagementClient Client { get; set; }
+        public const string DefaultRemoteAppArmNamespace = "Microsoft.RemoteApp";
+
+        public const string RemoteAppApiVersionValue = "2014-09-01";
+
+        private IRemoteAppManagementClient Client { get; set; }
 
         internal RemoteAppManagementClientWrapper(AzureProfile profile, AzureSubscription subscription)
         {
-            Client = AzureSession.ClientFactory.CreateClient<RemoteAppManagementClient>(profile, subscription, AzureEnvironment.Endpoint.ResourceManager);
+            var credentials = AzureSession.AuthenticationFactory.GetServiceClientCredentials(profile.Context);
+            Client = AzureSession.ClientFactory.CreateCustomArmClient<RemoteAppManagementClient>(credentials, profile.Context.Environment.GetEndpointAsUri(AzureEnvironment.Endpoint.ResourceManager), profile.Context.Subscription.Id);
         }
 
         #region Collections
 
         internal IEnumerable<Collection> ListCollections(string groupName)
         {
-            ListCollectionOperationResult response = Client.Collection.List(groupName);
+            IEnumerable<Collection> response = Client.CollectionOperations.List(groupName, DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue);
 
-            return response.Collections;
+            return response;
         }
 
         internal Collection Get(string ResourceGroupName, string collectionName)
         {
-            GetCollectionOperationResult response = Client.Collection.Get(ResourceGroupName, collectionName);
+            Collection response = Client.CollectionOperations.Get(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
 
-            return response.Collection;
+            return response;
         }
 
-        internal CollectionCreationDetails CreateOrUpdateCollection(string ResourceGroupName, string collectionName, CollectionCreationDetails createDetails)
+        internal CollectionCreationDetails CreateOrUpdateCollection(string ResourceGroupName, string collectionName, CollectionCreationDetailsWrapper createDetails)
         {
-            CreateCollectionOperationResult response = Client.Collection.CreateOrUpdate(ResourceGroupName, collectionName, createDetails);
+            CollectionCreationDetailsWrapper response = Client.CollectionOperations.CreateOrUpdate(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue, createDetails);
 
-            return response.Collection.Properties;
+            return response.Properties;
         }
 
         #endregion
@@ -48,43 +55,43 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 
         internal RemoteAppAccountDetails GetAccount()
         {
-            GetAccountOperationResult response = Client.Account.GetAccountInfo();
+            GetRemoteAppAccount response = Client.Account.GetAccountInfo(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue);
 
-            return response.Account.AccountDetails;
+            return response.Properties;
         }
 
         internal IEnumerable<string> GetEnabledFeatures()
         {
-            GetEnabledFeaturesOperationResult response = Client.Account.Features();
+            EnabledFeaturesPropertiesWrapper response = Client.Account.Features(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue);
 
-            return response.EnabledFeatures.FeaturesProperties.FeaturesList;
+            return response.Properties.Features;
         }
 
-        internal IEnumerable<Microsoft.Azure.Management.RemoteApp.Model.Location> GetLocations()
+        internal IEnumerable<Microsoft.Azure.Management.RemoteApp.Models.Location> GetLocations()
         {
-            GetAccountLocationOperationResult response = Client.Account.Locations();
+            LocationPropertiesWrapper response = Client.Account.Locations(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue);
 
-            return response.LocationResource.LocationProperties.LocationList;
+            return response.Properties.Locations;
         }
 
-        internal IEnumerable<RemoteAppBillingPlan> GetBillingPlans() 
+        internal IEnumerable<RemoteAppBillingPlan> GetBillingPlans()
         {
-            GetAccountBillingPlanOperationResult response = Client.Account.Plans();
+            BillingPlanPropertiesWrapper response = Client.Account.Plans(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue);
 
-            return response.BillingPlanResource.BillingPlansProperties.BillingPlans;
+            return response.Properties.Plans;
         }
 
         internal bool SetAccount(RemoteAppAccountDetails accountInfo)
         {
             bool accountExists = false;
-            
-            RemoteAppAccountDetails details = Client.Account.GetAccountInfo().Account.AccountDetails;
+
+            RemoteAppAccountDetails details = Client.Account.GetAccountInfo(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue).Properties;
 
             if (details != null)
             {
                 accountExists = true;
 
-                if(!((details.WorkspaceName == accountInfo.WorkspaceName) && (details.PrivacyUrl == accountInfo.PrivacyUrl))) 
+                if (!((details.WorkspaceName == accountInfo.WorkspaceName) && (details.PrivacyUrl == accountInfo.PrivacyUrl)))
                 {
                     if (String.IsNullOrEmpty(accountInfo.WorkspaceName))
                     {
@@ -96,13 +103,14 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
                         accountInfo.PrivacyUrl = details.PrivacyUrl;
                     }
 
-                    UpdateRemoteAppAccount accountUpdate = new UpdateRemoteAppAccount{
+                    UpdateRemoteAppAccount accountUpdate = new UpdateRemoteAppAccount
+                    {
                         Location = details.Location,
-                        UpdatedAccountDetails = accountInfo,
+                        Properties = accountInfo,
                         Tags = new Dictionary<string, string>()
-                    }; 
+                    };
 
-                    Client.Account.UpdateAccount(accountUpdate);
+                    Client.Account.UpdateAccount(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue, accountUpdate);
                 }
             }
             return accountExists;
@@ -110,7 +118,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 
         internal void SetAccountBilling()
         {
-            Client.Account.ActivateAccountBilling();
+            Client.Account.ActivateAccountBilling(DefaultRemoteAppArmNamespace, RemoteAppApiVersionValue);
         }
 
         #endregion
@@ -119,27 +127,27 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 
         internal IEnumerable<SessionWrapper> GetSessionList(string resourceGroupName, string collectionName)
         {
-            GetSessionListResult response = Client.Collection.SessionList(resourceGroupName, collectionName);
+            IEnumerable<SessionWrapper> response = Client.CollectionOperations.SessionList(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
 
-            return response.SessionList;
+            return response;
         }
 
         internal void SetSessionLogoff(string resourceGroupName, string collectionName,
             string userUpn)
         {
-            Client.Collection.SessionLogOff(resourceGroupName, collectionName, userUpn);
+            Client.CollectionOperations.SessionLogOff(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userUpn, RemoteAppApiVersionValue);
         }
 
         internal void SetSessionDisconnect(string resourceGroupName, string collectionName,
             string userUpn)
         {
-            Client.Collection.SessionDisconnect(resourceGroupName, collectionName, userUpn);
+            Client.CollectionOperations.SessionDisconnect(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userUpn, RemoteAppApiVersionValue);
         }
 
         internal void SetSessionSendMessage(string resourceGroupName, string collectionName, string userUpn,
             SessionSendMessageCommandParameter messageDetails)
         {
-            Client.Collection.SessionSendMessage(resourceGroupName, collectionName, userUpn, messageDetails);
+            Client.CollectionOperations.SessionSendMessage(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userUpn, RemoteAppApiVersionValue, messageDetails);
         }
 
         #endregion

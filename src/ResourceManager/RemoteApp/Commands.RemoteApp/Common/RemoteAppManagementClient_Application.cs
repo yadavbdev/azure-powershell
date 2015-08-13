@@ -1,5 +1,5 @@
 ﻿using Microsoft.Azure.Management.RemoteApp;
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 using System.Collections.Generic;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Common
@@ -8,100 +8,42 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
     {
         internal PublishedApplicationDetails GetApplication(string resourceGroupName, string collectionName, string alias)
         {
-            GetPublishedApplicationResult response = Client.Collection.GetPublishedApp(resourceGroupName, collectionName, alias);
+            return Client.CollectionOperations.GetPublishedApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, alias, RemoteAppApiVersionValue);
 
-            if (response != null)
-            {
-                return response.Result;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         internal IList<PublishedApplicationDetails> GetApplications(string resourceGroupName, string collectionName)
         {
-            GetPublishedApplicationListResult response = Client.Collection.ListPublishedApp(resourceGroupName, collectionName);
-
-            if (response != null)
-            {
-                return response.ResultList;
-            }
-            else
-            {
-                return null;
-            }
+            return Client.CollectionOperations.ListPublishedApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
         }
 
         internal IList<StartMenuApplication> GetStartMenuApps(string resourceGroupName, string collectionName)
         {
-            GetStartMenuApplicationListResult response = Client.Collection.ListStartMenuApps(resourceGroupName, collectionName);
-
-            if (response != null)
-            {
-                return response.ResultList;
-            }
-            else
-            {
-                return null;
-            }
+            return Client.CollectionOperations.ListStartMenuApps(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
         }
 
         internal StartMenuApplication GetStartMenuApp(string resourceGroupName, string collectionName, string applicationId)
         {
-            GetStartMenuApplicationResult response = Client.Collection.GetStartMenuApp(resourceGroupName, collectionName, applicationId);
+            return Client.CollectionOperations.GetStartMenuApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, applicationId, RemoteAppApiVersionValue);
 
-            if (response != null)
-            {
-                return response.Result;
-            }
-            else
-            {
-                return null;
-            }
         }
 
-        internal  IList<PublishingOperationResult> PublishApp(string resourceGroupName, string collectionName, ApplicationDetailsListParameter details)
+        internal PublishingOperationResult PublishApp(string resourceGroupName, string collectionName, ApplicationDetails details)
         {
-            PublishApplicationsResult response = Client.Collection.PublishApplications(resourceGroupName, collectionName, details);
+            return Client.CollectionOperations.PublishOrUpdateApplication(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, details.Alias, RemoteAppApiVersionValue, details);
 
-            if (response != null)
-            {
-                return response.ResultList;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         internal IList<PublishingOperationResult> UnpublishApp(string resourceGroupName, string collectionName, AliasesListParameter details)
         {
-            UnpublishApplicationsResult response = Client.Collection.Unpublish(resourceGroupName, collectionName, details);
+            return Client.CollectionOperations.Unpublish(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue, details);
 
-            if (response != null)
-            {
-                return response.ResultList;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         internal IList<PublishingOperationResult> UnpublishAllApps(string resourceGroupName, string collectionName)
         {
-            UnpublishApplicationsResult response = Client.Collection.UnpublishAll(resourceGroupName, collectionName);
+            return Client.CollectionOperations.UnpublishAll(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
 
-            if (response != null)
-            {
-                return response.ResultList;
-            }
-            else
-            {
-                return null;
-            }
         }
     }
 }

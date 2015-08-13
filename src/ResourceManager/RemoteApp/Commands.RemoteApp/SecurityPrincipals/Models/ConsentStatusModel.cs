@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------------
 
 
-using Microsoft.Azure.Management.RemoteApp.Model;
+using Microsoft.Azure.Management.RemoteApp.Models;
 
 namespace LocalModels
 {
@@ -21,9 +21,9 @@ namespace LocalModels
     {
         public ConsentStatusModel(SecurityPrincipalInfo securityPrincipalInfo)
         {
-            Name = securityPrincipalInfo.Properties.SecurityPrincipal.Name;
-            UserIdType = securityPrincipalInfo.Properties.SecurityPrincipal.UserIdType;
-            ConsentStatus = securityPrincipalInfo.Properties.Status;
+            Name = securityPrincipalInfo.Properties.User.Name;
+            UserIdType = (PrincipalProviderType)securityPrincipalInfo.Properties.User.UserIdType;
+            ConsentStatus = (ConsentStatus)securityPrincipalInfo.Properties.Status;
         }
         public string Name { get; set; }
 
