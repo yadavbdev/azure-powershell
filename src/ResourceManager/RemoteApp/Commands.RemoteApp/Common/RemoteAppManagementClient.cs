@@ -22,8 +22,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 
         internal RemoteAppManagementClientWrapper(AzureProfile profile, AzureSubscription subscription)
         {
-            var credentials = AzureSession.AuthenticationFactory.GetServiceClientCredentials(profile.Context);
-            Client = AzureSession.ClientFactory.CreateCustomArmClient<RemoteAppManagementClient>(credentials, profile.Context.Environment.GetEndpointAsUri(AzureEnvironment.Endpoint.ResourceManager), profile.Context.Subscription.Id);
+            Client = AzureSession.ClientFactory.CreateArmClient<RemoteAppManagementClient>();
         }
 
         #region Collections
@@ -47,6 +46,11 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
             CollectionCreationDetailsWrapper response = Client.CollectionOperations.CreateOrUpdate(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue, createDetails);
 
             return response.Properties;
+        }
+
+        internal void DeleteCollection(string ResourceGroupName, string collectionName)
+        {
+            Client.CollectionOperations.Delete(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
         }
 
         #endregion
