@@ -132,20 +132,19 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 
         public override void ExecuteRemoteAppCmdlet()
         {
-            CollectionCreationDetailsWrapper createDetails = new CollectionCreationDetailsWrapper();
-
-            createDetails.Properties = new CollectionCreationDetails()
-            {
-                Name = CollectionName,
+            CollectionCreationDetailsWrapper createDetails = new CollectionCreationDetailsWrapper(){
+                CollectionCreationDetailsWrapperName = CollectionName,
                 TemplateImageName = ImageName,
                 Region = Location,
+                Location = Location,
                 BillingPlanName = Plan,
                 Description = Description,
                 CustomRdpProperty = CustomRdpProperty,
-                Mode = (ResourceType == null || ResourceType == CollectionMode.Unassigned) ? CollectionMode.Apps : ResourceType.Value
+                Mode = (ResourceType == null || ResourceType == CollectionMode.Unassigned) ? CollectionMode.Apps : ResourceType.Value,
+                Tags = new Dictionary<string, string>()
             };
 
-            CollectionCreationDetails response = RemoteAppClient.CreateOrUpdateCollection(ResourceGroupName, CollectionName, createDetails);
+            CollectionCreationDetailsWrapper response = RemoteAppClient.CreateOrUpdateCollection(ResourceGroupName, CollectionName, createDetails);
 
             if (response != null)
             {

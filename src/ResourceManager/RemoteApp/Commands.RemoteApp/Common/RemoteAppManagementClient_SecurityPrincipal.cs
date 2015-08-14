@@ -8,19 +8,19 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
     {
         internal IList<SecurityPrincipalInfo> GetUsers(string ResourceGroupName, string collectionName, string UserUpn)
         {
-            SecurityPrincipalInfoListResult response = Client.CollectionOperations.GetUsers(ResourceGroupName, DefaultRemoteAppArmNamespace, UserUpn, RemoteAppApiVersionValue, null);
+            SecurityPrincipalInfoListResult response = Client.Collection.GetUsers(ResourceGroupName, DefaultRemoteAppArmNamespace, UserUpn, RemoteAppApiVersionValue);
 
             return response.UserConsentStatuses;
         }
 
         internal SecurityPrincipalOperationErrorDetails AddUser(string ResourceGroupName, string collectionName, SecurityPrincipal userToAdd)
         {
-            return Client.CollectionOperations.AddSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToAdd.Name, RemoteAppApiVersionValue, userToAdd);
+            return Client.Collection.AddSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToAdd.Name, RemoteAppApiVersionValue, userToAdd);
         }
 
         internal SecurityPrincipalOperationErrorDetails DeleteUser(string ResourceGroupName, string collectionName, SecurityPrincipal userToDelete)
         {
-            return Client.CollectionOperations.DeleteSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToDelete.Name, RemoteAppApiVersionValue, userToDelete);
+            return Client.Collection.DeleteSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToDelete.Name, RemoteAppApiVersionValue, userToDelete);
         }
 
     }

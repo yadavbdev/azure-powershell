@@ -21,9 +21,9 @@ namespace LocalModels
     {
         public ConsentStatusModel(SecurityPrincipalInfo securityPrincipalInfo)
         {
-            Name = securityPrincipalInfo.Properties.User.Name;
-            UserIdType = (PrincipalProviderType)securityPrincipalInfo.Properties.User.UserIdType;
-            ConsentStatus = (ConsentStatus)securityPrincipalInfo.Properties.Status;
+            Name = securityPrincipalInfo.User.Name;
+            UserIdType = (PrincipalProviderType)securityPrincipalInfo.User.UserIdType;
+            ConsentStatus = (ConsentStatus)securityPrincipalInfo.Status;
         }
         public string Name { get; set; }
 

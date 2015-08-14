@@ -47,7 +47,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
         public override void ExecuteRemoteAppCmdlet()
         {
             CollectionCreationDetailsWrapper details = null;
-            CollectionCreationDetails response = null;
+            CollectionCreationDetailsWrapper response = null;
             Collection collection = null;
 
             collection = FindCollection(ResourceGroupName, CollectionName);
@@ -58,12 +58,9 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             }
 
             details = new CollectionCreationDetailsWrapper()
-            {
-                Properties = new CollectionCreationDetails()
-                {
-                    TemplateImageName = ImageName,
-                    WaitBeforeShutdownInMinutes = ForceLogoffWhenUpdateComplete ? -1 : 0
-                }
+            {      
+                TemplateImageName = ImageName,
+                WaitBeforeShutdownInMinutes = ForceLogoffWhenUpdateComplete ? -1 : 0
             };
 
             if (ShouldProcess(CollectionName, Commands_RemoteApp.UpdateCollection))

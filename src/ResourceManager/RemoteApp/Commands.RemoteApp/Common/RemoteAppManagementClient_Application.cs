@@ -8,41 +8,35 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
     {
         internal PublishedApplicationDetails GetApplication(string resourceGroupName, string collectionName, string alias)
         {
-            return Client.CollectionOperations.GetPublishedApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, alias, RemoteAppApiVersionValue);
+            return Client.Collection.GetPublishedApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, alias, RemoteAppApiVersionValue);
 
         }
 
         internal IList<PublishedApplicationDetails> GetApplications(string resourceGroupName, string collectionName)
         {
-            return Client.CollectionOperations.ListPublishedApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
+            return Client.Collection.ListPublishedApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
         }
 
         internal IList<StartMenuApplication> GetStartMenuApps(string resourceGroupName, string collectionName)
         {
-            return Client.CollectionOperations.ListStartMenuApps(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
+            return Client.Collection.ListStartMenuApps(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
         }
 
         internal StartMenuApplication GetStartMenuApp(string resourceGroupName, string collectionName, string applicationId)
         {
-            return Client.CollectionOperations.GetStartMenuApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, applicationId, RemoteAppApiVersionValue);
+            return Client.Collection.GetStartMenuApp(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, applicationId, RemoteAppApiVersionValue);
 
         }
 
         internal PublishingOperationResult PublishApp(string resourceGroupName, string collectionName, ApplicationDetails details)
         {
-            return Client.CollectionOperations.PublishOrUpdateApplication(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, details.Alias, RemoteAppApiVersionValue, details);
+            return Client.Collection.PublishOrUpdateApplication(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, details.Alias, RemoteAppApiVersionValue, details);
 
         }
 
-        internal IList<PublishingOperationResult> UnpublishApp(string resourceGroupName, string collectionName, AliasesListParameter details)
+        internal PublishingOperationResult UnpublishApp(string resourceGroupName, string collectionName, string alias)
         {
-            return Client.CollectionOperations.Unpublish(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue, details);
-
-        }
-
-        internal IList<PublishingOperationResult> UnpublishAllApps(string resourceGroupName, string collectionName)
-        {
-            return Client.CollectionOperations.UnpublishAll(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue);
+            return Client.Collection.Unpublish(resourceGroupName, DefaultRemoteAppArmNamespace, collectionName, RemoteAppApiVersionValue, alias);
 
         }
     }

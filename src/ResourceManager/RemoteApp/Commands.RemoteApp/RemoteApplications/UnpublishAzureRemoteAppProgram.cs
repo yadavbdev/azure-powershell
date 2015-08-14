@@ -37,32 +37,13 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             ValueFromPipelineByPropertyName = true,
             HelpMessage = "Aliases of the programs to unpublish")]
         [ValidateNotNullOrEmpty()]
-        public string[] Alias { get; set; }
+        public string Alias { get; set; }
 
         public override void ExecuteRemoteAppCmdlet()
         {
-            IList<PublishingOperationResult> response = null;
+            PublishingOperationResult response = null;
 
-            if (Alias.Count() == 0)
-            {
-#if false   // TODO need to add the resource strings
-                if (ShouldProcess(Commands_RemoteApp.UnpublishProgramConfirmationDescription,
-                    Commands_RemoteApp.GenericAreYouSureQuestion,
-                    Commands_RemoteApp.UnpublishProgramCaptionMessage))
-#endif
-                {
-                    response = RemoteAppClient.UnpublishAllApps(ResourceGroupName, CollectionName);
-                }
-            }
-            else
-            {
-                AliasesListParameter appAlias = new AliasesListParameter()
-                {
-                    Aliases = new List<string>(Alias)
-                };
-
-                response = RemoteAppClient.UnpublishApp(ResourceGroupName, CollectionName, appAlias);
-            }
+            response = RemoteAppClient.UnpublishApp(ResourceGroupName, CollectionName, Alias);
 
             if (response != null)
             {

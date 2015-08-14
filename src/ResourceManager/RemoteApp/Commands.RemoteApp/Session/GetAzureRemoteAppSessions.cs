@@ -62,10 +62,10 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                     {
                         foreach (SessionWrapper session in sessions)
                         {
-                            if (session.Properties.UserUpn == UserUpn)
+                            if (session.UserUpn == UserUpn)
                             {
                                 found = true;
-                                WriteObject(session.Properties);
+                                WriteObject(session);
                             }
                         }
                         if (!found)

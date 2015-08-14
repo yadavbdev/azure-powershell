@@ -37,9 +37,9 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
         [ValidateNotNullOrEmpty()]
         public string ProgramName { get; set; }
 
-        public class ApplicationComparer : IComparer<StartMenuApplicationProperties>
+        public class ApplicationComparer : IComparer<StartMenuApplication>
         {
-            public int Compare(StartMenuApplicationProperties first, StartMenuApplicationProperties second)
+            public int Compare(StartMenuApplication first, StartMenuApplication second)
             {
                 if (first == null)
                 {
@@ -75,8 +75,8 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             {
                 if (ExactMatch)
                 {
-                    StartMenuApplicationProperties application = null;
-                    application = response.FirstOrDefault(app => String.Equals(app.Properties.Name, ProgramName, StringComparison.InvariantCultureIgnoreCase)).Properties;
+                    StartMenuApplication application = null;
+                    application = response.FirstOrDefault(app => String.Equals(app.Name, ProgramName, StringComparison.InvariantCultureIgnoreCase));
 
                     if (application == null)
                     {
@@ -91,19 +91,19 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                 }
                 else
                 {
-                    List<StartMenuApplicationProperties> matchingApps = null;
+                    List<StartMenuApplication> matchingApps = null;
                     if (getAllPrograms)
                     {
-                        matchingApps = response.Select((app) => app.Properties).ToList();
+                        matchingApps = response.ToList();
                     }
                     else if (UseWildcard)
                     {
-                        matchingApps = response.Where(app => Wildcard.IsMatch(app.Name)).Select((app) => app.Properties).ToList(); ;
+                        matchingApps = response.Where(app => Wildcard.IsMatch(app.Name)).ToList(); ;
                     }
 
                     if (matchingApps != null && matchingApps.Count() > 0)
                     {
-                        IComparer<StartMenuApplicationProperties> comparer = new ApplicationComparer();
+                        IComparer<StartMenuApplication> comparer = new ApplicationComparer();
                         matchingApps.Sort(comparer);
                         WriteObject(matchingApps, true);
                         found = true;

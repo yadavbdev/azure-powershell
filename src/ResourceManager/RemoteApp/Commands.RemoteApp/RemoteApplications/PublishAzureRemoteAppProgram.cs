@@ -81,10 +81,10 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                 {
                     StartMenuApplication startMenu = RemoteAppClient.GetStartMenuApp(ResourceGroupName, CollectionName, StartMenuAppId);
 
-                    appName = startMenu.Properties.Name;
-                    appPath = startMenu.Properties.VirtualPath;
-                    iconURI = startMenu.Properties.IconUri;
-                    iconPngUris = startMenu.Properties.IconPngUris;
+                    appName = startMenu.Name;
+                    appPath = startMenu.VirtualPath;
+                    iconURI = startMenu.IconUri;
+                    iconPngUris = startMenu.IconPngUris;
                     break;
                 }
             }

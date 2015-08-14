@@ -49,9 +49,9 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
         [ValidateNotNullOrEmpty()]
         public string Alias { get; set; }
 
-        public class ApplicationComparer : IComparer<ApplicationDetails>
+        public class ApplicationComparer : IComparer<PublishedApplicationDetails>
         {
-            public int Compare(ApplicationDetails first, ApplicationDetails second)
+            public int Compare(PublishedApplicationDetails first, PublishedApplicationDetails second)
             {
                 if (first == null)
                 {
@@ -79,8 +79,8 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
         private bool GetAllPublishedApps()
         {
             IEnumerable<PublishedApplicationDetails> response = null;
-            List<ApplicationDetails> spList = null;
-            ApplicationDetails appDetails = null;
+            List<PublishedApplicationDetails> spList = null;
+            PublishedApplicationDetails appDetails = null;
             bool found = false;
 
             response = RemoteAppClient.GetApplications(ResourceGroupName, CollectionName);
@@ -89,7 +89,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             {
                 if (ExactMatch)
                 {
-                    appDetails = response.FirstOrDefault(app => String.Equals(app.Properties.Name, RemoteAppProgram, StringComparison.InvariantCultureIgnoreCase)).Properties;
+                    appDetails = response.FirstOrDefault(app => String.Equals(app.Name, RemoteAppProgram, StringComparison.InvariantCultureIgnoreCase));
                     if (appDetails == null)
                     {
                         WriteErrorWithTimestamp("Program: " + RemoteAppProgram + " does not exist in collection " + CollectionName);
@@ -105,16 +105,16 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                 {
                     if (UseWildcard)
                     {
-                        spList = response.Where(app => Wildcard.IsMatch(app.Properties.Name)).Select((app) => app.Properties).ToList();
+                        spList = response.Where(app => Wildcard.IsMatch(app.Name)).ToList();
                     }
                     else
                     {
-                        spList = response.Select((app) => app.Properties).ToList();
+                        spList = response.ToList();
                     }
 
                     if (spList != null && spList.Count() > 0)
                     {
-                        IComparer<ApplicationDetails> comparer = new ApplicationComparer();
+                        IComparer<PublishedApplicationDetails> comparer = new ApplicationComparer();
                         spList.Sort(comparer);
                         WriteObject(spList, true);
                         found = true;
@@ -134,7 +134,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 
             if (response != null)
             {
-                WriteObject(response.Properties);
+                WriteObject(response);
                 found = true;
             }
 
