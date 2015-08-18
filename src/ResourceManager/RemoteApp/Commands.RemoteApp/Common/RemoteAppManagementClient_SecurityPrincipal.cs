@@ -6,21 +6,21 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 {
     public partial class RemoteAppManagementClientWrapper
     {
-        internal IList<SecurityPrincipalInfo> GetUsers(string ResourceGroupName, string collectionName, string UserUpn)
+        internal IList<SecurityPrincipalInfo> GetUsers(string ResourceGroupName, string collectionName)
         {
-            SecurityPrincipalInfoListResult response = Client.Collection.GetUsers(ResourceGroupName, DefaultRemoteAppArmNamespace, UserUpn, RemoteAppApiVersionValue);
+            SecurityPrincipalInfoListResult response = Client.Collection.GetUsers(collectionName, ResourceGroupName);
 
             return response.UserConsentStatuses;
         }
 
         internal SecurityPrincipalOperationErrorDetails AddUser(string ResourceGroupName, string collectionName, SecurityPrincipal userToAdd)
         {
-            return Client.Collection.AddSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToAdd.Name, RemoteAppApiVersionValue, userToAdd);
+            return Client.Collection.AddSecurityPrincipal(userToAdd, collectionName, userToAdd.Name, ResourceGroupName);
         }
 
         internal SecurityPrincipalOperationErrorDetails DeleteUser(string ResourceGroupName, string collectionName, SecurityPrincipal userToDelete)
         {
-            return Client.Collection.DeleteSecurityPrincipal(ResourceGroupName, DefaultRemoteAppArmNamespace, collectionName, userToDelete.Name, RemoteAppApiVersionValue, userToDelete);
+            return Client.Collection.DeleteSecurityPrincipal(userToDelete, collectionName, userToDelete.Name, ResourceGroupName);
         }
 
     }

@@ -74,7 +74,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
             ConsentStatusModel model = null;
             bool found = false;
 
-            response = RemoteAppClient.GetUsers(ResourceGroupName, CollectionName, UserUpn);
+            response = RemoteAppClient.GetUsers(ResourceGroupName, CollectionName);
 
             if (ExactMatch)
             {

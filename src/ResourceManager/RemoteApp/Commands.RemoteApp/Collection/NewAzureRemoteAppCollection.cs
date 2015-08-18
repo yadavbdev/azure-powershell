@@ -22,7 +22,7 @@ using Microsoft.Azure.Commands.RemoteApp;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 {
-    [Cmdlet(VerbsCommon.New, "AzureRemoteAppCollection", DefaultParameterSetName = NoDomain), OutputType(typeof(CollectionCreationDetails))]
+    [Cmdlet(VerbsCommon.New, "AzureRemoteAppCollection", DefaultParameterSetName = NoDomain), OutputType(typeof(CollectionCreationDetailsWrapper))]
     public class NewAzureRemoteAppCollection : RemoteAppArmResourceCmdletBase
     {
         private const string DomainJoined = "DomainJoined";
@@ -141,7 +141,8 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
                 Description = Description,
                 CustomRdpProperty = CustomRdpProperty,
                 Mode = (ResourceType == null || ResourceType == CollectionMode.Unassigned) ? CollectionMode.Apps : ResourceType.Value,
-                Tags = new Dictionary<string, string>()
+                Tags = new Dictionary<string, string>(),
+                ResourceGroupName = ResourceGroupName
             };
 
             CollectionCreationDetailsWrapper response = RemoteAppClient.CreateOrUpdateCollection(ResourceGroupName, CollectionName, createDetails);

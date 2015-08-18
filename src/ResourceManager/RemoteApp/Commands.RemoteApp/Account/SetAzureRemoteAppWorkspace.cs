@@ -43,7 +43,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
         {
             bool exists = false;
 
-            RemoteAppAccountDetails accountInfo = new RemoteAppAccountDetails();
+            AccountDetailsWrapper accountInfo = new AccountDetailsWrapper();
             accountInfo.PrivacyUrl = PrivacyUrl;
             accountInfo.WorkspaceName = WorkspaceName;
 

@@ -27,7 +27,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
     {
         public override void ExecuteCmdlet()
         {
-            List<RemoteAppBillingPlan> plans = RemoteAppClient.GetBillingPlans().ToList();
+            List<BillingPlan> plans = RemoteAppClient.GetBillingPlans().ToList();
 
             if (plans != null)
             {

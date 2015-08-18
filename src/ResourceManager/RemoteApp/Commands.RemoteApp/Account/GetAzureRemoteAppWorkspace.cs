@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
     {
         public override void ExecuteCmdlet()
         {
-            GetRemoteAppAccount account = RemoteAppClient.GetAccount();
+            AccountDetailsWrapper account = RemoteAppClient.GetAccount();
 
             if (account != null)
             {

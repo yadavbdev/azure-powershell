@@ -21,7 +21,7 @@ using Microsoft.Azure.Commands.RemoteApp;
 
 namespace Microsoft.Azure.Commands.RemoteApp.Cmdlet
 {
-    [Cmdlet(VerbsData.Update, "AzureRemoteAppCollection", SupportsShouldProcess = true), OutputType(typeof(CollectionCreationDetails))]
+    [Cmdlet(VerbsData.Update, "AzureRemoteAppCollection", SupportsShouldProcess = true), OutputType(typeof(CollectionCreationDetailsWrapper))]
     public class UpdateAzureRemoteAppCollection : RemoteAppArmResourceCmdletBase
     {
         [Parameter(
