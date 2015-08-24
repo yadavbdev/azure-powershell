@@ -30,7 +30,7 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 
         internal IEnumerable<Collection> ListCollections(string groupName)
         {
-            IEnumerable<Collection> response = Client.Collection.List(groupName);
+            IEnumerable<Collection> response = Client.Collection.ListResourceGroupCollections(groupName);
 
             return response;
         }
@@ -130,9 +130,9 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
 
         #region Sessions
 
-        internal IEnumerable<SessionWrapper> GetSessionList(string resourceGroupName, string collectionName)
+        internal IEnumerable<SessionListItemProperties> GetSessionList(string resourceGroupName, string collectionName)
         {
-            IEnumerable<SessionWrapper> response = Client.Collection.SessionList(collectionName, resourceGroupName);
+            IEnumerable<SessionListItemProperties> response = Client.Collection.SessionList(collectionName, resourceGroupName).Sessions;
 
             return response;
         }
