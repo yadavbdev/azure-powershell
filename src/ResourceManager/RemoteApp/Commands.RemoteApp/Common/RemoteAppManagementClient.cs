@@ -2,6 +2,7 @@
 using Microsoft.Azure.Common.Authentication.Models;
 using Microsoft.Azure.Management.RemoteApp;
 using Microsoft.Azure.Management.RemoteApp.Models;
+using Microsoft.Rest;
 using Microsoft.WindowsAzure.Commands.ServiceManagement.Model;
 using System;
 using System.Collections.Generic;
@@ -26,13 +27,23 @@ namespace Microsoft.Azure.Commands.RemoteApp.Common
             Client.ArmNamespace = DefaultRemoteAppArmNamespace;
         }
 
+        internal string GetSubscriptionId()
+        {
+            return Client.SubscriptionId;
+        }
+
+        internal Uri GetBaseUri()
+        {
+            return Client.BaseUri;
+        }
+
         #region Collections
 
         internal IEnumerable<Collection> ListCollections(string groupName)
         {
-            IEnumerable<Collection> response = Client.Collection.ListResourceGroupCollections(groupName);
+            CollectionListResult response = Client.Collection.ListResourceGroupCollections(groupName);
 
-            return response;
+            return response.Value;
         }
 
         internal Collection Get(string ResourceGroupName, string collectionName)
